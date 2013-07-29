@@ -48,10 +48,10 @@
 'applications)
 (defcustom org-journal-dir "~/Documents/journal/" "Directory containing journal entries"
   :type 'string :group 'org-journal)
-(defcustom org-journal-date-format "%A, %x%n"
+(defcustom org-journal-date-format "* %A, %x%n"
   "Format string for date, by default YYYY-MM-DD."
   :type 'string :group 'org-journal)
-(defcustom org-journal-time-format "%R "
+(defcustom org-journal-time-format "\n** %R"
   "Format string for time, by default HH:MM. Set it to a blank string if you want to disable timestamps."
   :type 'string :group 'org-journal)
 
@@ -60,8 +60,7 @@
 
 ;; Automatically switch to journal mode when opening a journal entry file
 (add-to-list 'auto-mode-alist
-	     (cons (concat (car (last (split-string org-journal-dir "/" t)))
-			   "/[0-9]\\{8\\}$") 'org-journal-mode))
+	     (cons "[0-9]\\{8\\}$" 'org-journal-mode))
 
 (require 'calendar)
 (add-hook 'calendar-initial-window-hook 'org-journal-get-list)
@@ -92,9 +91,9 @@
   (find-file (concat org-journal-dir (format-time-string "%Y%m%d")))
   (goto-char (point-max))
   (let ((unsaved (buffer-modified-p)))
-    (if (equal (point-max) 1) (insert "* " (format-time-string org-journal-date-format)))
+    (if (equal (point-max) 1) (insert (format-time-string org-journal-date-format)))
     (unless (eq (current-column) 0) (insert "\n"))
-    (insert "\n** " (format-time-string org-journal-time-format))
+    (insert (format-time-string org-journal-time-format))
     (hide-sublevels 2)
     (set-buffer-modified-p unsaved)))
 
